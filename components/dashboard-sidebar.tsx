@@ -9,6 +9,7 @@ import {
     LayoutDashboard,
     ListTodo,
     BarChart2,
+    FileText,
     User,
     Settings,
     LogOut
@@ -18,6 +19,7 @@ const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Job Tracker', href: '/dashboard/jobs', icon: ListTodo },
     { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart2 },
+    { name: 'Resumes', href: '/dashboard/resumes', icon: FileText },
     { name: 'Profile', href: '/dashboard/profile', icon: User },
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]

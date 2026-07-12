@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import SettingsPanel from '@/components/settings-panel'
+import ResumeManager from '@/components/resume-manager'
 
 export const dynamic = 'force-dynamic'
 
-export default async function SettingsPage() {
+export default async function ResumesPage() {
     const supabase = await createClient()
 
     // Get user session
@@ -14,24 +14,31 @@ export default async function SettingsPage() {
         redirect('/auth/login')
     }
 
-    // Fetch jobs for export
-    const { data: jobs } = await supabase
-        .from('jobs')
+    // Fetch resumes
+    const { data: resumes } = await supabase
+        .from('resumes')
         .select('*')
         .order('created_at', { ascending: false })
 
+    // Fetch jobs (for resume-job linkage)
+    const { data: jobs } = await supabase
+        .from('jobs')
+        .select('id, job_title, company_name, location, status, priority, date_applied, resume_id')
+        .order('created_at', { ascending: false })
+
     return (
-        <div className="space-y-6 max-w-4xl">
+        <div className="space-y-6">
             <div className="flex flex-col gap-1.5">
                 <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
-                    Settings
+                    Resumes
                 </h1>
                 <p className="text-zinc-500 text-sm">
-                    Backup databases or export job tracking analytics
+                    Manage your resumes and see which job applications use each one
                 </p>
             </div>
 
-            <SettingsPanel
+            <ResumeManager
+                initialResumes={resumes || []}
                 jobs={jobs || []}
                 user={user}
             />

@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TrackHire - Job Application Tracker",
+  title: "TrackHire",
   description: "Organize, track, and manage all your job applications in one dashboard.",
 };
 
