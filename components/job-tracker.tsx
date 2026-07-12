@@ -508,8 +508,8 @@ export default function JobTracker({ initialJobs, resumes, userId }: JobTrackerP
                     <Table>
                         <TableHeader className="bg-zinc-50/50 dark:bg-zinc-900/30">
                             <TableRow>
-                                <TableHead className="font-semibold text-zinc-900 dark:text-zinc-100">Job Title</TableHead>
                                 <TableHead className="font-semibold text-zinc-900 dark:text-zinc-100">Company</TableHead>
+                                <TableHead className="font-semibold text-zinc-900 dark:text-zinc-100">Job Title</TableHead>
                                 <TableHead className="font-semibold text-zinc-900 dark:text-zinc-100">Status</TableHead>
                                 <TableHead className="font-semibold text-zinc-900 dark:text-zinc-100">Priority</TableHead>
                                 <TableHead className="font-semibold text-zinc-900 dark:text-zinc-100">Location</TableHead>
@@ -524,9 +524,6 @@ export default function JobTracker({ initialJobs, resumes, userId }: JobTrackerP
                                     className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all cursor-pointer"
                                     onClick={() => handleOpenDetails(job)}
                                 >
-                                    <TableCell className="font-bold text-zinc-900 dark:text-white">
-                                        {job.job_title}
-                                    </TableCell>
                                     <TableCell className="text-zinc-600 dark:text-zinc-400">
                                         <div className="flex items-center gap-1.5">
                                             <span>{job.company_name}</span>
@@ -542,6 +539,9 @@ export default function JobTracker({ initialJobs, resumes, userId }: JobTrackerP
                                                 </a>
                                             )}
                                         </div>
+                                    </TableCell>
+                                    <TableCell className="font-bold text-zinc-900 dark:text-white">
+                                        {job.job_title}
                                     </TableCell>
                                     <TableCell>
                                         <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold border ${statusColors[job.status] || 'bg-zinc-100'}`}>
@@ -561,7 +561,7 @@ export default function JobTracker({ initialJobs, resumes, userId }: JobTrackerP
                                         {job.location || 'Remote/Hybrid'}
                                     </TableCell>
                                     <TableCell className="text-zinc-500 dark:text-zinc-400 text-xs">
-                                        {job.date_applied}
+                                        {(() => { const [y, m, d] = job.date_applied.split('-'); return `${d}-${m}-${y}`; })()}
                                     </TableCell>
                                     <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                         <div className="flex justify-end gap-1.5">
@@ -881,13 +881,19 @@ export default function JobTracker({ initialJobs, resumes, userId }: JobTrackerP
                                     value={form.watch('resume_id') || 'none'}
                                     onValueChange={(val) => form.setValue('resume_id', val || 'none')}
                                 >
-                                    <SelectTrigger className="h-10 border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50">
-                                        <SelectValue placeholder="Select resume" />
+                                    <SelectTrigger className="h-10 border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 w-full overflow-hidden">
+                                        <span className="truncate block text-left w-full">
+                                            {(() => {
+                                                const id = form.watch('resume_id')
+                                                if (!id || id === 'none') return 'None / Select later'
+                                                return resumes.find((r) => r.id === id)?.name ?? 'Select resume'
+                                            })()}
+                                        </span>
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent className="max-w-[460px]">
                                         <SelectItem value="none">None / Select later</SelectItem>
                                         {resumes.map((res) => (
-                                            <SelectItem key={res.id} value={res.id}>
+                                            <SelectItem key={res.id} value={res.id} className="whitespace-normal break-words">
                                                 {res.name}
                                             </SelectItem>
                                         ))}
