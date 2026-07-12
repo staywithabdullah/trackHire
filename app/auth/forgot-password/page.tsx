@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as zod from 'zod'
@@ -10,7 +11,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
-import { Loader2, Briefcase, Mail, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Loader2, Mail, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react'
 
 const forgotSchema = zod.object({
     email: zod.string().email('Please enter a valid email address'),
@@ -68,8 +69,8 @@ export default function ForgotPasswordPage() {
                 className="w-full max-w-md"
             >
                 <div className="mb-8 flex items-center justify-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-900 text-white shadow dark:bg-white dark:text-black">
-                        <Briefcase className="h-5 w-5" />
+                    <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-transparent shadow-sm">
+                        <Image src="/logo.png" alt="TrackHire Logo" width={40} height={40} className="object-cover" />
                     </div>
                     <span className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                         TrackHire

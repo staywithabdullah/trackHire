@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import {
-    Briefcase,
     LayoutDashboard,
     ListTodo,
     BarChart2,
@@ -28,9 +28,9 @@ export default function DashboardSidebar() {
     return (
         <aside className="fixed inset-y-0 left-0 z-20 flex w-64 flex-col border-r border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80">
             {/* Sidebar Header */}
-            <div className="flex h-16 items-center gap-2.5 px-6 border-b border-zinc-100/80 dark:border-zinc-800/80">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-black">
-                    <Briefcase className="h-5 w-5" />
+            <div className="flex h-16 items-center gap-2.5 px-6 border-b border-zinc-100/80 dark:border-zinc-800/80 mt-2">
+                <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-md bg-transparent">
+                    <Image src="/logo.png" alt="TrackHire Logo" width={36} height={36} className="object-cover" />
                 </div>
                 <span className="text-lg font-bold tracking-tight text-zinc-950 dark:text-white">
                     TrackHire

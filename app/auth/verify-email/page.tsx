@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
-import { Loader2, Briefcase, Mail, RefreshCw, LogOut, CheckCircle2 } from 'lucide-react'
+import { Loader2, Mail, RefreshCw, LogOut, CheckCircle2 } from 'lucide-react'
 
 export default function VerifyEmailPage() {
     const router = useRouter()
@@ -81,8 +82,8 @@ export default function VerifyEmailPage() {
                 className="w-full max-w-md"
             >
                 <div className="mb-8 flex items-center justify-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-900 text-white shadow dark:bg-white dark:text-black">
-                        <Briefcase className="h-5 w-5" />
+                    <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-transparent shadow-sm">
+                        <Image src="/logo.png" alt="TrackHire Logo" width={40} height={40} className="object-cover" />
                     </div>
                     <span className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                         TrackHire
