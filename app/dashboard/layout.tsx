@@ -20,16 +20,47 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
     }
 
     // Fetch or fallback profile data
-    const { data: profile } = await supabase
+    let { data: profile } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single()
 
+    // Sync profile and full name from user metadata if missing/empty
+    const metaFullName = user.user_metadata?.full_name || ''
+    const metaAvatarUrl = user.user_metadata?.avatar_url || ''
+
+    if (!profile) {
+        const { data: newProfile } = await supabase
+            .from('profiles')
+            .insert({
+                id: user.id,
+                full_name: metaFullName,
+                avatar_url: metaAvatarUrl,
+            })
+            .select()
+            .single()
+        if (newProfile) {
+            profile = newProfile
+        }
+    } else if (metaFullName && !profile.full_name) {
+        const { data: updatedProfile } = await supabase
+            .from('profiles')
+            .update({
+                full_name: metaFullName,
+            })
+            .eq('id', user.id)
+            .select()
+            .single()
+        if (updatedProfile) {
+            profile = updatedProfile
+        }
+    }
+
     const userData = {
         email: user.email,
-        fullName: profile?.full_name || '',
-        avatarUrl: profile?.avatar_url || '',
+        fullName: profile?.full_name || metaFullName || '',
+        avatarUrl: profile?.avatar_url || metaAvatarUrl || '',
     }
 
     return (

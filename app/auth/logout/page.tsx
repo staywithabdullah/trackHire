@@ -10,12 +10,16 @@ export default function LogoutPage() {
 
     useEffect(() => {
         const handleLogout = async () => {
-            await supabase.auth.signOut()
-            router.push('/auth/login')
-            router.refresh()
+            try {
+                await supabase.auth.signOut()
+            } catch (error) {
+                console.error('Error signing out:', error)
+            } finally {
+                window.location.href = '/auth/login'
+            }
         }
         handleLogout()
-    }, [router, supabase])
+    }, [supabase])
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-zinc-100 dark:bg-zinc-950">

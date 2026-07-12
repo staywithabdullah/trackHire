@@ -24,6 +24,10 @@ create policy "Users can update their own profile"
   on public.profiles for update
   using (auth.uid() = id);
 
+create policy "Users can insert their own profile"
+  on public.profiles for insert
+  with check (auth.uid() = id);
+
 -- Function to handle new user signup
 create or replace function public.handle_new_user()
 returns trigger as $$
