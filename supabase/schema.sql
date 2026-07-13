@@ -187,3 +187,41 @@ create policy "Allow users to update their own profile images"
 create policy "Allow users to delete their own profile images"
   on storage.objects for delete
   using ( bucket_id = 'profile-images' and (storage.foldername(name))[1] = auth.uid()::text );
+
+
+-- -----------------------------------------------------------------------------
+-- Profile Links Table
+-- -----------------------------------------------------------------------------
+create table if not exists public.profile_links (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name text not null,
+  url text not null,
+  created_at timestamp with time zone default now() not null,
+  updated_at timestamp with time zone default now() not null
+);
+
+-- Enable RLS for Profile Links
+alter table public.profile_links enable row level security;
+
+-- Policies for Profile Links
+create policy "Users can view their own links"
+  on public.profile_links for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert their own links"
+  on public.profile_links for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update their own links"
+  on public.profile_links for update
+  using (auth.uid() = user_id);
+
+create policy "Users can delete their own links"
+  on public.profile_links for delete
+  using (auth.uid() = user_id);
+
+-- Trigger for updated_at on profile_links
+create or replace trigger on_profile_link_updated
+  before update on public.profile_links
+  for each row execute procedure public.handle_updated_at();
