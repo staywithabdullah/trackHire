@@ -16,6 +16,9 @@ interface PasswordManagerProps {
 export default function PasswordManager({ user, hasPasswordIdentity }: PasswordManagerProps) {
     const supabase = createClient()
 
+    // Track whether user has a password — starts from server prop, flips after first set
+    const [passwordSet, setPasswordSet] = useState(hasPasswordIdentity || user?.user_metadata?.has_password === true)
+
     const [currentPassword, setCurrentPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -26,7 +29,7 @@ export default function PasswordManager({ user, hasPasswordIdentity }: PasswordM
 
     const [isSaving, setIsSaving] = useState(false)
 
-    const isSetMode = !hasPasswordIdentity
+    const isSetMode = !passwordSet
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -67,6 +70,7 @@ export default function PasswordManager({ user, hasPasswordIdentity }: PasswordM
             // Update password
             const { error } = await supabase.auth.updateUser({
                 password: newPassword,
+                data: { has_password: true }
             })
 
             if (error) throw error
@@ -77,6 +81,11 @@ export default function PasswordManager({ user, hasPasswordIdentity }: PasswordM
             setCurrentPassword('')
             setNewPassword('')
             setConfirmPassword('')
+
+            // Update local state if password was set for the first time
+            if (isSetMode) {
+                setPasswordSet(true)
+            }
         } catch (err: any) {
             toast.error(err.message || 'Failed to update password')
         } finally {

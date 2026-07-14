@@ -22,8 +22,8 @@ export default async function ProfilePage() {
         .eq('id', user.id)
         .single()
 
-    // Determine if user has an email/password identity
-    const hasPasswordIdentity = user.app_metadata?.providers?.includes('email') ?? false
+    // Determine if user has an email/password identity or has manually set a password
+    const hasPasswordIdentity = (user.app_metadata?.providers?.includes('email') ?? false) || (user.user_metadata?.has_password === true)
 
     return (
         <div className="space-y-8 max-w-2xl">
