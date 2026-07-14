@@ -93,13 +93,13 @@ export default function ResetPasswordPage() {
                         <CardTitle className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                             Reset password
                         </CardTitle>
-                        <CardDescription className="text-sm text-zinc-500 dark:text-zinc-405">
+                        <CardDescription className="text-sm text-zinc-500 dark:text-zinc-400">
                             Enter your new secure password below
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         {errorMsg && (
-                            <div className="mb-4 flex items-center gap-2.5 rounded-lg bg-red-50 p-3 text-sm text-red-650 dark:bg-red-955/20 dark:text-red-400">
+                            <div className="mb-4 flex items-center gap-2.5 rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950/20 dark:text-red-400">
                                 <AlertCircle className="h-4 w-4 shrink-0" />
                                 <span>{errorMsg}</span>
                             </div>
@@ -107,7 +107,7 @@ export default function ResetPasswordPage() {
 
                         {status === 'success' ? (
                             <div className="space-y-4 py-2 text-center">
-                                <div className="flex items-center gap-2.5 rounded-lg bg-emerald-55 p-3.5 text-sm text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-450 justify-center">
+                                <div className="flex items-center gap-2.5 rounded-lg bg-emerald-50 p-3.5 text-sm text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-450 justify-center">
                                     <CheckCircle2 className="h-5 w-5 shrink-0" />
                                     <span>Password updated! Redirecting to login...</span>
                                 </div>
@@ -125,12 +125,12 @@ export default function ResetPasswordPage() {
                                             type={showPassword ? 'text' : 'password'}
                                             placeholder="••••••••"
                                             disabled={isLoading}
-                                            className="pl-10 pr-10 h-10 border-zinc-200 bg-white/50 focus:bg-white dark:border-zinc-800 dark:bg-zinc-950/50 dark:focus:bg-zinc-955"
+                                            className="pl-10 pr-10 h-10 border-zinc-200 bg-white/50 focus:bg-white dark:border-zinc-800 dark:bg-zinc-950/50 dark:focus:bg-zinc-950"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3 top-3 text-zinc-405 hover:text-zinc-600 dark:hover:text-zinc-200"
+                                            className="absolute right-3 top-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
                                         >
                                             {showPassword ? (
                                                 <EyeOff className="h-4 w-4" />
@@ -155,12 +155,12 @@ export default function ResetPasswordPage() {
                                             type={showConfirmPassword ? 'text' : 'password'}
                                             placeholder="••••••••"
                                             disabled={isLoading}
-                                            className="pl-10 pr-10 h-10 border-zinc-200 bg-white/50 focus:bg-white dark:border-zinc-800 dark:bg-zinc-950/50 dark:focus:bg-zinc-955"
+                                            className="pl-10 pr-10 h-10 border-zinc-200 bg-white/50 focus:bg-white dark:border-zinc-800 dark:bg-zinc-950/50 dark:focus:bg-zinc-950"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                            className="absolute right-3 top-3 text-zinc-405 hover:text-zinc-650 dark:hover:text-zinc-200"
+                                            className="absolute right-3 top-3 text-zinc-400 hover:text-zinc-650 dark:hover:text-zinc-200"
                                         >
                                             {showConfirmPassword ? (
                                                 <EyeOff className="h-4 w-4" />
@@ -177,7 +177,7 @@ export default function ResetPasswordPage() {
                                 <Button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full h-10 bg-zinc-900 hover:bg-zinc-850 text-white dark:bg-zinc-100 dark:hover:bg-zinc-200 dark:text-zinc-950 transition-colors font-medium flex items-center justify-center gap-2"
+                                    className="w-full h-10 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:hover:bg-zinc-200 dark:text-zinc-950 transition-colors font-medium flex items-center justify-center gap-2"
                                 >
                                     {isLoading ? (
                                         <>
@@ -191,7 +191,7 @@ export default function ResetPasswordPage() {
                             </form>
                         )}
                     </CardContent>
-                    <CardFooter className="flex justify-center border-t border-zinc-100/80 pt-5 dark:border-zinc-805/80">
+                    <CardFooter className="flex justify-center border-t border-zinc-100/80 pt-5 dark:border-zinc-800/80">
                         <Link
                             href="/auth/login"
                             className="text-xs font-semibold text-zinc-500 hover:underline dark:text-zinc-400"

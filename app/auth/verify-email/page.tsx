@@ -92,25 +92,25 @@ export default function VerifyEmailPage() {
 
                 <Card className="border border-zinc-200/80 bg-white/70 backdrop-blur-md shadow-xl dark:border-zinc-800/85 dark:bg-zinc-900/60">
                     <CardHeader className="space-y-2 text-center">
-                        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-850">
-                            <Mail className="h-6 w-6 text-zinc-650 dark:text-zinc-350" />
+                        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800">
+                            <Mail className="h-6 w-6 text-zinc-600 dark:text-zinc-300" />
                         </div>
                         <CardTitle className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                             Verify your email
                         </CardTitle>
                         <CardDescription className="text-sm text-zinc-500 dark:text-zinc-400">
-                            Wesent a verification link to your email address. Please click the link to confirm your account.
+                            We sent a verification link to your email address. Please click the link to confirm your account.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {errorMsg && (
-                            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-650 dark:bg-red-950/20 dark:text-red-400 text-center">
+                            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950/20 dark:text-red-400 text-center">
                                 {errorMsg}
                             </div>
                         )}
 
                         {resendStatus === 'sent' && (
-                            <div className="flex items-center justify-center gap-2 rounded-lg bg-emerald-55 p-3 text-sm text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400">
+                            <div className="flex items-center justify-center gap-2 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-450">
                                 <CheckCircle2 className="h-4 w-4 shrink-0" />
                                 <span>Verification email sent successfully!</span>
                             </div>
@@ -120,7 +120,7 @@ export default function VerifyEmailPage() {
                             <Button
                                 onClick={checkVerification}
                                 disabled={isLoading}
-                                className="w-full h-10 bg-zinc-900 hover:bg-zinc-850 text-white dark:bg-zinc-100 dark:hover:bg-zinc-200 dark:text-zinc-950 transition-colors font-medium flex items-center justify-center gap-2"
+                                className="w-full h-10 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:hover:bg-zinc-200 dark:text-zinc-950 transition-colors font-medium flex items-center justify-center gap-2"
                             >
                                 {isLoading ? (
                                     <>
@@ -155,7 +155,7 @@ export default function VerifyEmailPage() {
                     <CardFooter className="flex justify-center border-t border-zinc-100/80 pt-5 dark:border-zinc-800/80">
                         <button
                             onClick={handleLogout}
-                            className="flex items-center gap-1.5 text-xs font-semibold text-zinc-550 hover:underline dark:text-zinc-400"
+                            className="flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:underline dark:text-zinc-400"
                         >
                             <LogOut className="h-3.5 w-3.5" />
                             Back to login

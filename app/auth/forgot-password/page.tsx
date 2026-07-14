@@ -82,13 +82,13 @@ export default function ForgotPasswordPage() {
                         <CardTitle className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                             Forgot password
                         </CardTitle>
-                        <CardDescription className="text-sm text-zinc-500 dark:text-zinc-405">
+                        <CardDescription className="text-sm text-zinc-500 dark:text-zinc-400">
                             Enter your email address and we'll send you a password recovery link
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         {errorMsg && (
-                            <div className="mb-4 flex items-center gap-2.5 rounded-lg bg-red-50 p-3 text-sm text-red-650 dark:bg-red-955/20 dark:text-red-400">
+                            <div className="mb-4 flex items-center gap-2.5 rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950/20 dark:text-red-400">
                                 <AlertCircle className="h-4 w-4 shrink-0" />
                                 <span>{errorMsg}</span>
                             </div>
@@ -116,7 +116,7 @@ export default function ForgotPasswordPage() {
                                         Email
                                     </label>
                                     <div className="relative">
-                                        <Mail className="absolute left-3 top-3 h-4 w-4 text-zinc-405" />
+                                        <Mail className="absolute left-3 top-3 h-4 w-4 text-zinc-400" />
                                         <Input
                                             {...register('email')}
                                             type="email"
@@ -133,7 +133,7 @@ export default function ForgotPasswordPage() {
                                 <Button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full h-10 bg-zinc-900 hover:bg-zinc-850 text-white dark:bg-zinc-100 dark:hover:bg-zinc-200 dark:text-zinc-955 transition-colors font-medium flex items-center justify-center gap-2"
+                                    className="w-full h-10 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:hover:bg-zinc-200 dark:text-zinc-950 transition-colors font-medium flex items-center justify-center gap-2"
                                 >
                                     {isLoading ? (
                                         <>
