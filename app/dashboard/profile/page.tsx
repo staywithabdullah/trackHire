@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import ProfileForm from '@/components/profile-form'
-import ProfileLinksManager from '@/components/profile-links-manager'
+import PasswordManager from '@/components/password-manager'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,12 +22,8 @@ export default async function ProfilePage() {
         .eq('id', user.id)
         .single()
 
-    // Fetch important links
-    const { data: links } = await supabase
-        .from('profile_links')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+    // Determine if user has an email/password identity
+    const hasPasswordIdentity = user.app_metadata?.providers?.includes('email') ?? false
 
     return (
         <div className="space-y-8 max-w-2xl">
@@ -37,7 +33,7 @@ export default async function ProfilePage() {
                     Profile Settings
                 </h1>
                 <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-                    Manage your personal information, profile picture, and important links
+                    Manage your personal information, profile picture, and security settings
                 </p>
             </div>
 
@@ -50,10 +46,10 @@ export default async function ProfilePage() {
             {/* Divider */}
             <div className="h-px bg-zinc-200/70 dark:bg-zinc-800" />
 
-            {/* Important Links Section */}
-            <ProfileLinksManager
-                initialLinks={links ?? []}
-                userId={user.id}
+            {/* Password Management Section */}
+            <PasswordManager
+                user={user}
+                hasPasswordIdentity={hasPasswordIdentity}
             />
         </div>
     )
