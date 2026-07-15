@@ -99,9 +99,9 @@ export default function SignupPage() {
     }
 
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-gradient-to-br from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-black">
+        <div className="flex min-h-screen w-full bg-gradient-to-br from-zinc-50 via-white to-zinc-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-black">
             {/* Left side: Hero Image (visible on lg screens only) */}
-            <div className="relative hidden w-1/2 overflow-hidden bg-zinc-950 lg:block">
+            <div className="relative hidden w-1/2 overflow-hidden bg-zinc-950 lg:flex">
                 <Image
                     src="/auth-hero.png"
                     alt="TrackHire Dashboard"
@@ -119,7 +119,7 @@ export default function SignupPage() {
             </div>
 
             {/* Right side: Form context */}
-            <div className="flex w-full flex-col items-center justify-start overflow-y-auto px-4 py-12 lg:w-1/2 sm:px-6 lg:px-8">
+            <div className="flex w-full flex-col items-center justify-start px-4 py-10 sm:py-12 sm:px-6 lg:w-1/2 lg:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}

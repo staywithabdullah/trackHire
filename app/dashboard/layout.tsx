@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import DashboardSidebar from '@/components/dashboard-sidebar'
 import DashboardHeader from '@/components/dashboard-header'
+import { SidebarProvider } from '@/components/sidebar-context'
 
 type DashboardLayoutProps = {
     children: React.ReactNode
@@ -64,14 +65,17 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
     }
 
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-            <DashboardSidebar />
-            <div className="pl-64">
-                <DashboardHeader user={userData} />
-                <main className="pt-16 p-8 min-h-[calc(100vh-4rem)]">
-                    {children}
-                </main>
+        <SidebarProvider>
+            <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+                <DashboardSidebar />
+                {/* Content offset: full-width on mobile, shift right by sidebar width on lg+ */}
+                <div className="lg:pl-64">
+                    <DashboardHeader user={userData} />
+                    <main className="pt-16 p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-4rem)]">
+                        {children}
+                    </main>
+                </div>
             </div>
-        </div>
+        </SidebarProvider>
     )
 }
