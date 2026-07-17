@@ -71,7 +71,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
                 {/* Content offset: full-width on mobile, shift right by sidebar width on lg+ */}
                 <div className="lg:pl-64">
                     <DashboardHeader user={userData} />
-                    <main className="pt-16 p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-4rem)]">
+                    <main className="pt-16 px-4 pb-4 sm:px-6 sm:pb-6 lg:px-8 lg:pb-8 min-h-[calc(100vh-4rem)]">
                         {children}
                     </main>
                 </div>
