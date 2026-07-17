@@ -5,7 +5,7 @@ import { useSidebar } from '@/components/sidebar-context'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Search, Bell, Sun, Moon, Menu } from 'lucide-react'
+import { Search, Sun, Moon, Menu } from 'lucide-react'
 
 type DashboardHeaderProps = {
     user: {
@@ -63,15 +63,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                     <Search className="h-5 w-5" />
                 </Button>
 
-                {/* Notifications */}
-                <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    className="relative text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
-                >
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-red-500" />
-                </Button>
+
 
                 {/* Theme Switcher */}
                 <Button
