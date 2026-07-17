@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import DashboardSidebar from '@/components/dashboard-sidebar'
 import DashboardHeader from '@/components/dashboard-header'
 import { SidebarProvider } from '@/components/sidebar-context'
+import SessionMonitor from '@/components/session-monitor'
 
 type DashboardLayoutProps = {
     children: React.ReactNode
@@ -66,6 +67,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
 
     return (
         <SidebarProvider>
+            <SessionMonitor />
             <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
                 <DashboardSidebar />
                 {/* Content offset: full-width on mobile, shift right by sidebar width on lg+ */}
