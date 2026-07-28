@@ -197,6 +197,7 @@ create table if not exists public.profile_links (
   user_id uuid references auth.users(id) on delete cascade not null,
   name text not null,
   url text not null,
+  category text default 'Other' check (category in ('Socials', 'Resources', 'Prompts', 'Other')),
   created_at timestamp with time zone default now() not null,
   updated_at timestamp with time zone default now() not null
 );

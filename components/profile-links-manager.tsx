@@ -22,7 +22,14 @@ import {
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
+import { Card, CardTitle, CardDescription } from '@/components/ui/card'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
 import {
     Dialog,
     DialogContent,
@@ -34,10 +41,13 @@ import {
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
+type LinkCategory = 'Socials' | 'Resources' | 'Prompts' | 'Other'
+
 interface ProfileLink {
     id: string
     name: string
     url: string
+    category: LinkCategory
     created_at: string
 }
 
@@ -46,11 +56,22 @@ interface ProfileLinksManagerProps {
     userId: string
 }
 
+// ─── Constants ───────────────────────────────────────────────────────────────
+
+const CATEGORIES: LinkCategory[] = ['Socials', 'Resources', 'Prompts', 'Other']
+
+const CATEGORY_STYLES: Record<LinkCategory, string> = {
+    Socials: 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-900/40',
+    Resources: 'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/40',
+    Prompts: 'bg-violet-50 text-violet-600 border-violet-200 dark:bg-violet-950/30 dark:text-violet-400 dark:border-violet-900/40',
+    Other: 'bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700',
+}
+
+const FILTER_TABS = ['All', ...CATEGORIES] as const
+type FilterTab = typeof FILTER_TABS[number]
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-/**
- * Returns a Lucide icon component based on the link name keyword.
- */
 function getLinkIcon(name: string) {
     const lower = name.toLowerCase()
     if (lower.includes('linkedin') || lower.includes('job') || lower.includes('work')) return <Briefcase className="h-4 w-4" />
@@ -61,9 +82,6 @@ function getLinkIcon(name: string) {
     return <Globe className="h-4 w-4" />
 }
 
-/**
- * Returns a color class set based on the link name keyword.
- */
 function getLinkColor(name: string): string {
     const lower = name.toLowerCase()
     if (lower.includes('linkedin')) return 'bg-blue-50 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400'
@@ -75,9 +93,6 @@ function getLinkColor(name: string): string {
     return 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400'
 }
 
-/**
- * Ensures that a URL has a proper protocol scheme for opening.
- */
 function ensureProtocol(url: string): string {
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
         return `https://${url}`
@@ -93,11 +108,13 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
     // ── State ────────────────────────────────────────────────────────────────
 
     const [links, setLinks] = useState<ProfileLink[]>(initialLinks)
+    const [activeFilter, setActiveFilter] = useState<FilterTab>('All')
 
     // Add
     const [isAddOpen, setIsAddOpen] = useState(false)
     const [addName, setAddName] = useState('')
     const [addUrl, setAddUrl] = useState('')
+    const [addCategory, setAddCategory] = useState<LinkCategory>('Other')
     const [isAdding, setIsAdding] = useState(false)
 
     // Edit
@@ -105,6 +122,7 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
     const [editingLink, setEditingLink] = useState<ProfileLink | null>(null)
     const [editName, setEditName] = useState('')
     const [editUrl, setEditUrl] = useState('')
+    const [editCategory, setEditCategory] = useState<LinkCategory>('Other')
     const [isSavingEdit, setIsSavingEdit] = useState(false)
 
     // Delete
@@ -115,12 +133,21 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
     // Copy feedback
     const [copiedId, setCopiedId] = useState<string | null>(null)
 
+    // ── Derived ──────────────────────────────────────────────────────────────
+
+    const filteredLinks = activeFilter === 'All'
+        ? links
+        : links.filter((l) => l.category === activeFilter)
+
+    const countByCategory = (cat: LinkCategory) => links.filter((l) => l.category === cat).length
+
     // ── Handlers ─────────────────────────────────────────────────────────────
 
     // ADD
     const handleOpenAdd = () => {
         setAddName('')
         setAddUrl('')
+        setAddCategory('Other')
         setIsAddOpen(true)
     }
 
@@ -133,7 +160,7 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
         try {
             const { data, error } = await supabase
                 .from('profile_links')
-                .insert([{ user_id: userId, name: addName.trim(), url: addUrl.trim() }])
+                .insert([{ user_id: userId, name: addName.trim(), url: addUrl.trim(), category: addCategory }])
                 .select()
                 .single()
 
@@ -154,6 +181,7 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
         setEditingLink(link)
         setEditName(link.name)
         setEditUrl(link.url)
+        setEditCategory(link.category ?? 'Other')
         setIsEditOpen(true)
     }
 
@@ -167,7 +195,7 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
         try {
             const { error } = await supabase
                 .from('profile_links')
-                .update({ name: editName.trim(), url: editUrl.trim() })
+                .update({ name: editName.trim(), url: editUrl.trim(), category: editCategory })
                 .eq('id', editingLink.id)
 
             if (error) throw error
@@ -175,7 +203,7 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
             setLinks((prev) =>
                 prev.map((l) =>
                     l.id === editingLink.id
-                        ? { ...l, name: editName.trim(), url: editUrl.trim() }
+                        ? { ...l, name: editName.trim(), url: editUrl.trim(), category: editCategory }
                         : l
                 )
             )
@@ -236,9 +264,9 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
             {/* ═══════════════════════ HEADER ═══════════════════════ */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Important Links</h2>
+                    <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Your Links</h2>
                     <p className="text-xs text-zinc-500 mt-0.5">
-                        Store links you frequently share when applying for jobs
+                        {links.length} link{links.length !== 1 ? 's' : ''} saved across {CATEGORIES.filter(c => countByCategory(c) > 0).length} categories
                     </p>
                 </div>
                 <Button
@@ -249,31 +277,62 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
                 </Button>
             </div>
 
+            {/* ═══════════════════ FILTER TABS ════════════════════ */}
+            {links.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                    {FILTER_TABS.map((tab) => {
+                        const count = tab === 'All' ? links.length : countByCategory(tab as LinkCategory)
+                        const isActive = activeFilter === tab
+                        return (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveFilter(tab)}
+                                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold border transition-all ${isActive
+                                    ? 'bg-zinc-900 text-white border-zinc-900 dark:bg-zinc-50 dark:text-zinc-900 dark:border-zinc-50'
+                                    : 'bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:text-zinc-800 dark:hover:text-zinc-200'
+                                    }`}
+                            >
+                                {tab}
+                                <span className={`text-[10px] font-bold rounded-full px-1 ${isActive ? 'bg-white/20 text-white dark:bg-zinc-900/20 dark:text-zinc-900' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'
+                                    }`}>
+                                    {count}
+                                </span>
+                            </button>
+                        )
+                    })}
+                </div>
+            )}
+
             {/* ═══════════════════════ LIST ═══════════════════════ */}
-            {links.length === 0 ? (
+            {filteredLinks.length === 0 ? (
                 <Card className="border border-dashed border-zinc-300 dark:border-zinc-800 py-12 flex flex-col items-center justify-center text-center">
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 mb-4">
                         <Link2 className="h-5 w-5 text-zinc-400" />
                     </div>
                     <CardTitle className="text-zinc-900 dark:text-white font-bold text-base">
-                        No links added yet
+                        {activeFilter === 'All' ? 'No links added yet' : `No ${activeFilter} links`}
                     </CardTitle>
                     <CardDescription className="text-xs text-zinc-500 mt-1.5 max-w-[260px]">
-                        Add your LinkedIn, GitHub, portfolio, or any other link you share when applying.
+                        {activeFilter === 'All'
+                            ? 'Add your LinkedIn, GitHub, portfolio, or any other link you share when applying.'
+                            : `Add a link and assign it to the "${activeFilter}" category.`}
                     </CardDescription>
-                    <Button
-                        onClick={handleOpenAdd}
-                        variant="outline"
-                        className="mt-4 h-9 text-xs font-semibold border-zinc-200 dark:border-zinc-800"
-                    >
-                        <Plus className="mr-1.5 h-3.5 w-3.5" /> Add Your First Link
-                    </Button>
+                    {activeFilter === 'All' && (
+                        <Button
+                            onClick={handleOpenAdd}
+                            variant="outline"
+                            className="mt-4 h-9 text-xs font-semibold border-zinc-200 dark:border-zinc-800"
+                        >
+                            <Plus className="mr-1.5 h-3.5 w-3.5" /> Add Your First Link
+                        </Button>
+                    )}
                 </Card>
             ) : (
                 <div className="space-y-2">
-                    {links.map((link) => {
+                    {filteredLinks.map((link) => {
                         const isCopied = copiedId === link.id
                         const iconColor = getLinkColor(link.name)
+                        const category: LinkCategory = link.category ?? 'Other'
                         return (
                             <Card
                                 key={link.id}
@@ -286,9 +345,14 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
                                             {getLinkIcon(link.name)}
                                         </div>
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-sm font-bold text-zinc-900 dark:text-white truncate">
-                                                {link.name}
-                                            </p>
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                <p className="text-sm font-bold text-zinc-900 dark:text-white truncate">
+                                                    {link.name}
+                                                </p>
+                                                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold border shrink-0 ${CATEGORY_STYLES[category]}`}>
+                                                    {category}
+                                                </span>
+                                            </div>
                                             <p className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
                                                 {link.url}
                                             </p>
@@ -396,6 +460,26 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
                             />
                         </div>
 
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                                Category
+                            </label>
+                            <Select
+                                value={addCategory}
+                                onValueChange={(val) => setAddCategory(val as LinkCategory)}
+                                disabled={isAdding}
+                            >
+                                <SelectTrigger className="h-10 border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50">
+                                    <SelectValue placeholder="Select category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {CATEGORIES.map((cat) => (
+                                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
                         <DialogFooter className="pt-4 border-t border-zinc-100 dark:border-zinc-900">
                             <Button
                                 type="button"
@@ -412,7 +496,7 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
                                 className="h-10 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-50 dark:hover:bg-zinc-200 dark:text-zinc-950 font-semibold"
                             >
                                 {isAdding ? (
-                                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Adding...</>
+                                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Adding...</>
                                 ) : (
                                     'Add Link'
                                 )}
@@ -430,7 +514,7 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
                             Edit Link
                         </DialogTitle>
                         <DialogDescription className="text-xs text-zinc-500 mt-1">
-                            Update the name or URL of this link
+                            Update the name, URL, or category of this link
                         </DialogDescription>
                     </DialogHeader>
 
@@ -463,6 +547,26 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
                             />
                         </div>
 
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                                Category
+                            </label>
+                            <Select
+                                value={editCategory}
+                                onValueChange={(val) => setEditCategory(val as LinkCategory)}
+                                disabled={isSavingEdit}
+                            >
+                                <SelectTrigger className="h-10 border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50">
+                                    <SelectValue placeholder="Select category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {CATEGORIES.map((cat) => (
+                                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
                         <DialogFooter className="pt-4 border-t border-zinc-100 dark:border-zinc-900">
                             <Button
                                 type="button"
@@ -479,7 +583,7 @@ export default function ProfileLinksManager({ initialLinks, userId }: ProfileLin
                                 className="h-10 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-50 dark:hover:bg-zinc-200 dark:text-zinc-950 font-semibold"
                             >
                                 {isSavingEdit ? (
-                                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</>
+                                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</>
                                 ) : (
                                     'Save Changes'
                                 )}
