@@ -9,6 +9,7 @@ import {
     LayoutDashboard,
     ListTodo,
     FileText,
+    Link2,
     User,
     Settings,
     LogOut,
@@ -19,6 +20,7 @@ const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Job Tracker', href: '/dashboard/jobs', icon: ListTodo },
     { name: 'Resumes', href: '/dashboard/resumes', icon: FileText },
+    { name: 'Important Links', href: '/dashboard/links', icon: Link2 },
     { name: 'Profile', href: '/dashboard/profile', icon: User },
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
