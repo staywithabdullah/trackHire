@@ -12,6 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://checktrackhire.vercel.app"),
   title: {
     default: "TrackHire",
     template: "%s | TrackHire",
@@ -27,12 +28,21 @@ export const metadata: Metadata = {
     title: "TrackHire - Job Application Tracker",
     description: "Organize, track, and manage all your job applications in one seamless dashboard.",
     siteName: "TrackHire",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "TrackHire Logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "TrackHire - Job Application Tracker",
     description: "Organize, track, and manage all your job applications in one seamless dashboard.",
     creator: "@trackhire",
+    images: ["/logo.png"],
   },
   icons: {
     icon: "/favicon.ico",
