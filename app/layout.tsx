@@ -12,8 +12,31 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TrackHire",
-  description: "Organize, track, and manage all your job applications in one dashboard.",
+  title: {
+    default: "TrackHire",
+    template: "%s | TrackHire",
+  },
+  description: "Organize, track, and manage all your job applications in one seamless dashboard.",
+  keywords: ["job tracker", "career management", "job applications", "track jobs", "resume manager"],
+  authors: [{ name: "Abdullah Al Masud Bhuiyan" }],
+  creator: "Abdullah Al Masud Bhuiyan",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://checktrackhire.vercel.app",
+    title: "TrackHire - Job Application Tracker",
+    description: "Organize, track, and manage all your job applications in one seamless dashboard.",
+    siteName: "TrackHire",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TrackHire - Job Application Tracker",
+    description: "Organize, track, and manage all your job applications in one seamless dashboard.",
+    creator: "@trackhire",
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
